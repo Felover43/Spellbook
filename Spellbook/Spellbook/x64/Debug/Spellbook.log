@@ -1,0 +1,9 @@
+﻿C:\Program Files (x86)\Microsoft Visual Studio\2019\Community\MSBuild\Microsoft\VC\v160\Microsoft.CppBuild.targets(452,5): warning MSB8028: The intermediate directory (x64\Debug\) contains files shared from another project (auto hacks.vcxproj).  This can lead to incorrect clean and rebuild behavior.
+  clicker.cpp
+  copycat.cpp
+  helpers.cpp
+  main.cpp
+  record.cpp
+  Generating Code...
+E:\Github\Spellbook\Spellbook\Spellbook\helpers.cpp(197): warning C4715:  'PressDown': not all control paths return a value
+  Spellbook.vcxproj -> E:\Github\Spellbook\Spellbook\x64\Debug\Spellbook.exe
