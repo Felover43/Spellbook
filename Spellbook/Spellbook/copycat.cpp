@@ -414,25 +414,72 @@ void copycatexecute(record& rec)
 	std::vector<std::chrono::time_point<std::chrono::system_clock>> times;						//here we put now + rep for each value and wait till now reaches  that time.
 	record::node* poi;
 	std::chrono::time_point<std::chrono::system_clock> now;
+	long double wait;
 	int check = 1;
 	int i=0;
+	int j = 0;
 	while (check != -1)
 	{
-		now = std::chrono::system_clock::now();
-		/*wait = now +vec
-		while(now+time)		*/								//here goes now+start time.
-			poi = &(rec.getvector()[i]);
-			PressDown(poi);
-			pressed.push_back(poi);
-
-			
 		
+		if (rec.getvector().size() <= i)
+		{
+			if (check == 2)
+				break;
+			else
+				i = 0;
+		}
+		now = std::chrono::system_clock::now();
+		while (now.time_since_epoch.count() < rec.getvector()[i].time)								//wait till entry
+		{
+			if (!times.empty())																		
+			{
+				if (times[j].time_since_epoch.count >= pressed[j]->rep)								//checks time for reps while we wait on next start
+				{
+					PressUp(pressed[j]);
+					pressed.erase(pressed.begin() + j);
+					times.erase(times.begin() + j);
 
-			if (rec.getvector().size() <= i)
-				if (check == 2)
-					break;
+				}
 				else
-					i = 0;
+					j++;
+			}
+		}
+		while (1)
+		{
+			
+			PressDown(&(rec.getvector()[i]));
+			pressed.push_back(&(rec.getvector()[i]));
+			times.push_back(std::chrono::system_clock::now());
+			if (i + 1 < rec.getvector().size())
+			{
+				i++;
+				if (rec.getvector()[i].time == 0)
+				{
+					PressDown(&(rec.getvector()[i]));
+					pressed.push_back(&(rec.getvector()[i]));
+					times.push_back(std::chrono::system_clock::now());
+				}
+				else
+					break;
+			}
+			else
+				i = 0;
+				
+			
+
+					
+		}
+
+		//now = std::chrono::system_clock::now();
+		//wait = rec.getvector()[i].time;
+		//while (now.time_since_epoch.count() < wait)													//here goes now+start time.
+		//{
+		//	poi = &(rec.getvector()[i]);
+		//	PressDown(poi);
+		//	pressed.push_back(poi);
+
+		//}
+	
 		
 	}
 }
