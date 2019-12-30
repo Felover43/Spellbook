@@ -411,19 +411,28 @@ void copycatrecord(record& rec)
 void copycatexecute(record& rec)
 {
 	vector<record::node*> pressed;
+	std::vector<std::chrono::time_point<std::chrono::system_clock>> times;						//here we put now + rep for each value and wait till now reaches  that time.
 	record::node* poi;
+	std::chrono::time_point<std::chrono::system_clock> now;
 	int check = 1;
+	int i=0;
 	while (check != -1)
 	{
-		for (unsigned int i = 0; i < rec.getvector().size(); i++) 
-		{
+		now = std::chrono::system_clock::now();
+		/*wait = now +vec
+		while(now+time)		*/								//here goes now+start time.
 			poi = &(rec.getvector()[i]);
 			PressDown(poi);
 			pressed.push_back(poi);
-			//.....record cant handle two keys at once, it needs imporvment.
-		}
 
-		if (check == 2)
-			break;
+			
+		
+
+			if (rec.getvector().size() <= i)
+				if (check == 2)
+					break;
+				else
+					i = 0;
+		
 	}
 }
