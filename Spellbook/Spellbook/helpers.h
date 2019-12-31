@@ -11,7 +11,7 @@ long double DelayMove(long double);
 std::string ExePath();
 bool is_digits(const char*);
 void SetColorPurp(HDC);
-int* whichkey();
+vector<int> whichkey();
 int MoveMouse(POINT,int,long double);
 int DelayPress(long double);
 int PressDown(record::node*);

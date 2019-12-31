@@ -37,20 +37,17 @@ void SetColorPurp(HDC h)
 	SetBkColor(h, RGB(0, 0, 0));
 }
 
-int* whichkey()
+vector<int> whichkey()
 {
-	int pos = 0;
-	int* b=NULL;
-	while (true)
-	{
+	vector<int> nums;
+	
 		for (int i = 0; i < 256; i++) {
 			if (GetAsyncKeyState(i) & 0x8000) {
-				b[pos] = i;
-				pos++;
+				nums.push_back(i);
 			}
 		}
 
-	}
+	return nums;
 }
 
 double dran(double max, double min)
@@ -132,8 +129,7 @@ int DelayPress(long double time)
 
 int PressDown(record::node* node)
 {
-	std::chrono::time_point<std::chrono::system_clock> start, end;
-	std::chrono::duration<long double> num;
+
 	INPUT in;
 	
 	POINT mouse;
@@ -165,36 +161,83 @@ int PressDown(record::node* node)
 					if (node->key == 3)
 						in.mi.dwFlags = MOUSEEVENTF_MIDDLEDOWN;
 
-			//do something with this delta time , needs to be returned !!!!!!!!!!!!!!!!
 			
 			SendInput(1, &in, sizeof(in));
-			start = std::chrono::system_clock::now();
-			end = std::chrono::system_clock::now();
-			num = end - start;
 		}
 		else
 		{
-
-			if (!DelayPress(node->time))
-				return -1;
 			in.type = INPUT_KEYBOARD;
 			in.ki.wScan = node->key;
 			in.ki.time = 0;
 			in.ki.dwFlags = KEYEVENTF_SCANCODE;
-			//save this delta boi!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-			start = std::chrono::system_clock::now();
-			end = std::chrono::system_clock::now();
-			num = end - start;
 			SendInput(1, &in, sizeof(in));
 		
 		}
 		
-			
-		
-	
-
+		return 1;
 	
 }
+
+int PressUp(record::node* node)
+{
+	INPUT in;
+
+	POINT mouse;
+	int check = 1;
+
+
+	if (node->key < 10)
+	{
+		check = MoveMouse(node->pos, 100, node->time);
+		if (check == -1)
+			return -1;
+		in.type = INPUT_MOUSE;
+		GetCursorPos(&mouse);
+		in.mi.dx = mouse.x;
+		in.mi.dy = mouse.y;
+		in.mi.mouseData = 0;
+		in.mi.time = 0;
+		in.mi.dwExtraInfo = 0;
+		in.mi.dwExtraInfo = 0;
+		if (node->key == 1)
+		{
+			in.mi.dwFlags = MOUSEEVENTF_LEFTUP;
+		}
+
+		else
+			if (node->key == 2)
+				in.mi.dwFlags = MOUSEEVENTF_RIGHTUP;
+			else
+				if (node->key == 3)
+					in.mi.dwFlags = MOUSEEVENTF_MIDDLEUP;
+
+		
+		SendInput(1, &in, sizeof(in));
+		/*start = std::chrono::system_clock::now();
+		end = std::chrono::system_clock::now();
+		num = end - start;*/
+	}
+	else
+	{
+
+		/*if (!DelayPress(node->time))
+			return -1;*/
+		in.type = INPUT_KEYBOARD;
+		in.ki.wScan = node->key;
+		in.ki.time = 0;
+		in.ki.dwFlags = KEYEVENTF_SCANCODE | KEYEVENTF_KEYUP;
+		SendInput(1, &in, sizeof(in));
+
+	}
+
+	return 1;
+
+}
+
+
+
+
+
 //int PressUp(record::node* node)
 //{
 //	while (num.count() < rec.getvector()[i].rep)
