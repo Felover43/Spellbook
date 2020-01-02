@@ -135,7 +135,7 @@ void UploadTheCat(record& rec, string save)
 
 void copycatrecord(record& rec)
 {
-	std::chrono::time_point<std::chrono::system_clock> otime ,ntime ,etime ;
+	std::chrono::time_point<std::chrono::system_clock> otime ,ntime ,ctime ;
 	vector<std::chrono::time_point<std::chrono::system_clock>> time;				//!!!search for all places with otime and change.!!!!
 	vector<int> nums;
 	int emp = 0;
@@ -154,12 +154,13 @@ void copycatrecord(record& rec)
 	{
 		
 	}
+	otime = std::chrono::system_clock::now();
+	time.push_back(otime);
+	time.push_back(otime);
 	while (check)																		//loops till f2
 	{
 		
-		otime = std::chrono::system_clock::now();											//start
-		
-		keys = whichkey();																		//the main function!!!!
+		keys = whichkey();																//the main function!!!!
 		emp = 0;
 		j = 0;
 			
@@ -174,8 +175,9 @@ void copycatrecord(record& rec)
 					break;
 				}
 				ntime = std::chrono::system_clock::now();
-				time.push_back(otime);
-				time.push_back(ntime);
+				time[0]=otime;
+				otime = std::chrono::system_clock::now();
+				time[1]=ntime;
 				times.push_back(time);
 				nums.push_back(keys[0]);
 				GetCursorPos(&mouse);
@@ -201,7 +203,7 @@ void copycatrecord(record& rec)
 						nums.insert(nums.begin() + j, keys[i]);
 						GetCursorPos(&mouse);
 						mice.insert(mice.begin() + j,mouse);
-						if (emp)				//add else				//wtf is check
+						if (emp)				//add else				
 						{
 							time[0] = ntime;
 							times.insert(times.begin() + j, time);		// time[0] = ntime ,time[1]=ntime; time[0]-time[1]=0
@@ -209,9 +211,12 @@ void copycatrecord(record& rec)
 
 						else								//if nums is empty
 						{
+
 							emp++;
 							time[0] = otime;
-											//possible ntime here for instance A held but then hit B aswell.
+							otime = std::chrono::system_clock::now();
+							ntime = std::chrono::system_clock::now();			//possible ntime here for instance A held but then hit B aswell.
+							time[1] = ntime;
 							times.insert(times.begin() + j, time);
 							
 						}
@@ -246,7 +251,9 @@ void copycatrecord(record& rec)
 							else																//if nums is empty
 							{
 								time[0] = otime;
+								otime = std::chrono::system_clock::now();
 								times.push_back(time);
+								ntime = std::chrono::system_clock::now();
 								times[0][1] = ntime;
 								emp++;
 							}
@@ -276,8 +283,10 @@ void copycatrecord(record& rec)
 						else								//if nums is empty
 						{
 							time[0] = otime;
+							otime = std::chrono::system_clock::now();
 							emp++;
 							times.push_back(time);
+							ntime = std::chrono::system_clock::now();
 							times[0][1] = ntime;
 						}
 						j++;
