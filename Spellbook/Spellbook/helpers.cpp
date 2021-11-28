@@ -3,6 +3,7 @@
 #include <chrono>
 #include <Windows.h>
 #include <fstream>
+#include <algorithm> 
 using namespace std;
 
 string ExePath()
@@ -180,6 +181,7 @@ int PressDown(record::node* node)
 
 int PressUp(record::node* node)
 {
+	
 	INPUT in;
 
 	POINT mouse;
@@ -188,7 +190,7 @@ int PressUp(record::node* node)
 
 	if (node->key < 10)
 	{
-		check = MoveMouse(node->pos, 100, node->time);
+		check = MoveMouse(node->pos2, 100, node->time);
 		if (check == -1)
 			return -1;
 		in.type = INPUT_MOUSE;
@@ -234,7 +236,50 @@ int PressUp(record::node* node)
 
 }
 
+void check_key(int key, record& rec, int& check, std::chrono::time_point<std::chrono::system_clock> ntime, std::chrono::duration<long double> start, int i, std::vector<POINT> mice,bool& first)
+{
+	 
+	std::chrono::duration<long double> rep;
+	if (key == VK_F2)
+		check = 0;
+	while(GetAsyncKeyState(key) && check==1)
+	{
+	}
+	std::chrono::time_point<std::chrono::system_clock> etime = std::chrono::system_clock::now();
+	if (check) {
+		rep = etime - ntime;
+		if (i == 0)
+		{
+			rec.setvector((long double)start.count(), mice[0], mice[1], key, (long double)rep.count());
+			first = false;
+		}
+		else
+		{
+			while (first)
+			{
+			}
+			rec.setvector((long double)0, mice[0], mice[1], key, (long double)((rep).count()));
+		}
+	}
 
+}
+
+int key_press(record::node* node) {
+
+	std::chrono::time_point<std::chrono::system_clock> now, ends, endr;
+	std::chrono::duration<long double> num;
+	PressDown(node);
+	now = std::chrono::system_clock::now();
+	ends = std::chrono::system_clock::now();
+	num = (ends - now);
+	while (num.count() < node->rep)								//wait till entry
+	{
+		ends = std::chrono::system_clock::now();
+		num = (ends - now);
+	}
+	PressUp(node);
+	return 1;
+}
 
 
 

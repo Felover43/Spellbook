@@ -9,6 +9,8 @@
 #include <fstream>
 #include <sstream>
 #include <string>
+#include <thread> 
+#include <algorithm>
 using namespace std;
 
 
@@ -133,188 +135,245 @@ void UploadTheCat(record& rec, string save)
 	
 }
 
+//void copycatrecord(record& rec)
+//{
+//	std::chrono::time_point<std::chrono::system_clock> otime ,ntime ,ctime ;
+//	vector<std::chrono::time_point<std::chrono::system_clock>> time;				//!!!search for all places with otime and change.!!!!
+//	vector<int> nums;
+//	int emp = 0;
+//	vector<vector<std::chrono::time_point<std::chrono::system_clock>>> times;				//otime, ntime , rep, repe 
+//	std::vector<POINT> mice;
+//	POINT mouse;														
+//	vector<int> keys;																			//changed to pointer to use as array
+//	int check = 1;
+//	int i=0;
+//	int j=0;
+//	std::chrono::duration<long double> rep;
+//	std::chrono::duration<long double> num;
+//	
+//	
+//	while (GetAsyncKeyState(VK_F1))														//make sure f1 doesnt go into the vector, so we delay the repeat
+//	{
+//		
+//	}
+//	otime = std::chrono::system_clock::now();
+//	time.push_back(otime);
+//	time.push_back(otime);
+//	while (check)																		//loops till f2
+//	{
+//		
+//		keys = whichkey();																//the main function!!!!
+//		emp = 0;
+//		j = 0;
+//			
+//
+//		for (i = 0; i < keys.size(); i++)
+//		{
+//			if (nums.empty())											
+//			{
+//				if (keys[0] == VK_F2)
+//				{
+//					check = 0;
+//					break;
+//				}
+//				ntime = std::chrono::system_clock::now();
+//				time[0]=otime;
+//				otime = std::chrono::system_clock::now();
+//				time[1]=ntime;
+//				times.push_back(time);
+//				nums.push_back(keys[0]);
+//				GetCursorPos(&mouse);
+//				mice.push_back(mouse);
+//				
+//															//end = s-rep they are the same in the end...(this is both end and rep)
+//				emp++;
+//				j++;
+//				i++;
+//				if (keys.size() == i)
+//					break;
+//			}
+//			if (keys[i] == VK_F2)
+//			{
+//				check = 0;
+//				j = 0;
+//				break;
+//			}
+//				if (keys[i] <= nums[j])
+//				{
+//					if (!(keys[i] == nums[j]))
+//					{
+//						nums.insert(nums.begin() + j, keys[i]);
+//						GetCursorPos(&mouse);
+//						mice.insert(mice.begin() + j,mouse);
+//						if (emp)				//add else				
+//						{
+//							time[0] = ntime;
+//							times.insert(times.begin() + j, time);		// time[0] = ntime ,time[1]=ntime; time[0]-time[1]=0
+//						}
+//
+//						else								//if nums is empty
+//						{
+//
+//							emp++;
+//							time[0] = otime;
+//							otime = std::chrono::system_clock::now();
+//							ntime = std::chrono::system_clock::now();			//possible ntime here for instance A held but then hit B aswell.
+//							time[1] = ntime;
+//							times.insert(times.begin() + j, time);
+//							
+//						}
+//						j++;
+//					}
+//					else								//the nums[j] == key[i] we push them both forward(no need to pop)
+//						j++;
+//				}
+//				else                               //if key[i] > nums[j] it goes in to the end 
+//				{
+//					if (nums.size()==j)
+//					{
+//						for (i = i; i < keys.size(); i++)
+//						{
+//							if (keys[i] == VK_F2)
+//							{
+//								check = 0;
+//								j = 0;
+//								break;
+//							}
+//							nums.push_back(keys[i]);
+//							GetCursorPos(&mouse);
+//							mice.push_back(mouse);											//check this area something wrong with the j from this point !!!!!
+//							j++;
+//							if (emp)
+//							{
+//								time[0] = ntime;
+//								times.push_back(time);									// 0 time
+//								times[j + 1][1] = ntime;									//ntime - ntime
+//							}
+//
+//							else																//if nums is empty
+//							{
+//								time[0] = otime;
+//								otime = std::chrono::system_clock::now();
+//								times.push_back(time);
+//								ntime = std::chrono::system_clock::now();
+//								times[0][1] = ntime;
+//								emp++;
+//							}
+//						}
+//						break;
+//					}
+//					else
+//					{
+//						GetCursorPos(&mouse);
+//						num = times[j][1] - times[j][0];
+//						rep = std::chrono::system_clock::now() - times[j][1];
+//						rec.setvector(num.count(), mice[j],mouse, nums[j], rep.count());
+//						nums.erase(nums.begin() + j);
+//						times.erase(times.begin() + j);
+//						mice.erase(mice.begin() + j);
+//
+//						nums.insert(nums.begin() + j, keys[i]);
+//						GetCursorPos(&mouse);
+//						mice.push_back(mouse);
+//						if (emp)
+//						{
+//							time[0] = ntime;
+//							times.push_back(time);		//0 time 
+//							times[j+1][1] = ntime;
+//						}
+//
+//						else								//if nums is empty
+//						{
+//							time[0] = otime;
+//							otime = std::chrono::system_clock::now();
+//							emp++;
+//							times.push_back(time);
+//							ntime = std::chrono::system_clock::now();
+//							times[0][1] = ntime;
+//						}
+//						j++;
+//						break;
+//
+//
+//
+//					}
+//				}
+//				
+//			
+//			
+//		}
+//		while (j < nums.size())							//assume you start on num[j]that needs erase
+//		{
+//			GetCursorPos(&mouse);
+//			num = times[j][1] - times[j][0];
+//			rep = std::chrono::system_clock::now() - times[j][1];
+//			rec.setvector(num.count(), mice[j],mouse, nums[j], rep.count());
+//			nums.erase(nums.begin() + j);
+//			times.erase(times.begin() + j);
+//			mice.erase(mice.begin() + j);
+//		}
+//
+//
+//	}
+//	
+//}
+
+
+
 void copycatrecord(record& rec)
 {
-	std::chrono::time_point<std::chrono::system_clock> otime ,ntime ,ctime ;
-	vector<std::chrono::time_point<std::chrono::system_clock>> time;				//!!!search for all places with otime and change.!!!!
+	std::chrono::time_point<std::chrono::system_clock> otime, ntime;
 	vector<int> nums;
-	int emp = 0;
-	vector<vector<std::chrono::time_point<std::chrono::system_clock>>> times;				//otime, ntime , rep, repe 
+	vector<int> diff;
 	std::vector<POINT> mice;
-	POINT mouse;														
-	vector<int> keys;																			//changed to pointer to use as array
+	POINT mouse;
+	vector< std::thread> threads;
+	vector<int> keys;																
 	int check = 1;
-	int i=0;
-	int j=0;
-	std::chrono::duration<long double> rep;
-	std::chrono::duration<long double> num;
-	
-	
+	int i = 0;
+	GetCursorPos(&mouse);
+	mice.push_back(mouse);
+	mice.push_back(mouse);
+	bool first = false;
+
 	while (GetAsyncKeyState(VK_F1))														//make sure f1 doesnt go into the vector, so we delay the repeat
 	{
-		
 	}
+
 	otime = std::chrono::system_clock::now();
-	time.push_back(otime);
-	time.push_back(otime);
+	ntime = std::chrono::system_clock::now();
+
 	while (check)																		//loops till f2
 	{
-		
-		keys = whichkey();																//the main function!!!!
-		emp = 0;
-		j = 0;
-			
-
-		for (i = 0; i < keys.size(); i++)
+		//checks which key is being pressed.
+		diff.clear();
+		keys = whichkey();
+		std::set_difference(keys.begin(), keys.end(), nums.begin(), nums.end(),
+			std::inserter(diff, diff.begin()));
+		nums = keys;
+		if (!diff.empty())
 		{
-			if (nums.empty())											
-			{
-				if (keys[0] == VK_F2)
-				{
-					check = 0;
-					break;
-				}
-				ntime = std::chrono::system_clock::now();
-				time[0]=otime;
-				otime = std::chrono::system_clock::now();
-				time[1]=ntime;
-				times.push_back(time);
-				nums.push_back(keys[0]);
-				GetCursorPos(&mouse);
-				mice.push_back(mouse);
-				
-															//end = s-rep they are the same in the end...(this is both end and rep)
-				emp++;
-				j++;
-				i++;
-				if (keys.size() == i)
-					break;
-			}
-			if (keys[i] == VK_F2)
-			{
-				check = 0;
-				j = 0;
-				break;
-			}
-				if (keys[i] <= nums[j])
-				{
-					if (!(keys[i] == nums[j]))
-					{
-						nums.insert(nums.begin() + j, keys[i]);
-						GetCursorPos(&mouse);
-						mice.insert(mice.begin() + j,mouse);
-						if (emp)				//add else				
-						{
-							time[0] = ntime;
-							times.insert(times.begin() + j, time);		// time[0] = ntime ,time[1]=ntime; time[0]-time[1]=0
-						}
-
-						else								//if nums is empty
-						{
-
-							emp++;
-							time[0] = otime;
-							otime = std::chrono::system_clock::now();
-							ntime = std::chrono::system_clock::now();			//possible ntime here for instance A held but then hit B aswell.
-							time[1] = ntime;
-							times.insert(times.begin() + j, time);
-							
-						}
-						j++;
-					}
-					else								//the nums[j] == key[i] we push them both forward(no need to pop)
-						j++;
-				}
-				else                               //if key[i] > nums[j] it goes in to the end 
-				{
-					if (nums.size()==j)
-					{
-						for (i = i; i < keys.size(); i++)
-						{
-							if (keys[i] == VK_F2)
-							{
-								check = 0;
-								j = 0;
-								break;
-							}
-							nums.push_back(keys[i]);
-							GetCursorPos(&mouse);
-							mice.push_back(mouse);											//check this area something wrong with the j from this point !!!!!
-							j++;
-							if (emp)
-							{
-								time[0] = ntime;
-								times.push_back(time);									// 0 time
-								times[j + 1][1] = ntime;									//ntime - ntime
-							}
-
-							else																//if nums is empty
-							{
-								time[0] = otime;
-								otime = std::chrono::system_clock::now();
-								times.push_back(time);
-								ntime = std::chrono::system_clock::now();
-								times[0][1] = ntime;
-								emp++;
-							}
-						}
-						break;
-					}
-					else
-					{
-						GetCursorPos(&mouse);
-						num = times[j][1] - times[j][0];
-						rep = std::chrono::system_clock::now() - times[j][1];
-						rec.setvector(num.count(), mice[j],mouse, nums[j], rep.count());
-						nums.erase(nums.begin() + j);
-						times.erase(times.begin() + j);
-						mice.erase(mice.begin() + j);
-
-						nums.insert(nums.begin() + j, keys[i]);
-						GetCursorPos(&mouse);
-						mice.push_back(mouse);
-						if (emp)
-						{
-							time[0] = ntime;
-							times.push_back(time);		//0 time 
-							times[j+1][1] = ntime;
-						}
-
-						else								//if nums is empty
-						{
-							time[0] = otime;
-							otime = std::chrono::system_clock::now();
-							emp++;
-							times.push_back(time);
-							ntime = std::chrono::system_clock::now();
-							times[0][1] = ntime;
-						}
-						j++;
-						break;
-
-
-
-					}
-				}
-				
 			
-			
-		}
-		while (j < nums.size())							//assume you start on num[j]that needs erase
-		{
+
+			ntime = std::chrono::system_clock::now();
+			mice[0] = mice[1];
 			GetCursorPos(&mouse);
-			num = times[j][1] - times[j][0];
-			rep = std::chrono::system_clock::now() - times[j][1];
-			rec.setvector(num.count(), mice[j],mouse, nums[j], rep.count());
-			nums.erase(nums.begin() + j);
-			times.erase(times.begin() + j);
-			mice.erase(mice.begin() + j);
+			mice[1] = mouse;
 		}
-
-
+		for (i=0; i < diff.size(); i++)
+		{	//waits till keys are not pressed , we send i to know if its the first or not for later time calc
+			first = true;
+			threads.emplace_back(std::thread(check_key, diff[i], std::ref(rec), std::ref(check), ntime, (ntime - otime), i, mice, std::ref(first)));
+		}
 	}
-	
+	for (auto& th : threads)
+		th.join();
+
+	rec.sortcat();
 }
+
+
+
 //void copycatexecute(record& rec)
 //{
 //	std::chrono::time_point<std::chrono::system_clock> start, end;
@@ -453,89 +512,146 @@ void copycatrecord(record& rec)
 //
 //}
 
+//void copycatexecute(record& rec)
+//{
+//	vector<record::node*> pressed;
+//	record::node copy;
+//	std::vector<std::chrono::time_point<std::chrono::system_clock>> times;						//here we put now + rep for each value and wait till now reaches  that time.
+//	std::chrono::time_point<std::chrono::system_clock> now, ends, endr;
+//	std::chrono::duration<long double> num;
+//	int check = 1;
+//	int i=0;
+//	int j = 0;
+//	while (check != -1)
+//	{
+//		if (rec.getvector().size() <= i)
+//		{
+//			if (check == 2)
+//				break;
+//			else
+//				i = 0;
+//		}
+//		now = std::chrono::system_clock::now();
+//		ends = std::chrono::system_clock::now();
+//		num = (ends - now);
+//		while (num.count() < rec.getvector()[i].time)								//wait till entry
+//		{
+//			if (GetAsyncKeyState(VK_F2))
+//			{
+//				check = -1;
+//				break;
+//			}
+//			if (GetAsyncKeyState(VK_F3))
+//				check = 2;
+//
+//			if (!times.empty())																		
+//			{
+//				endr = std::chrono::system_clock::now();
+//				if (j >= times.size())
+//					j = 0;
+//				num = (endr - times[j]);
+//				if (num.count() >= pressed[j]->rep)								//checks time for reps while we wait on next start
+//				{
+//					PressUp(pressed[j]);
+//					pressed.erase(pressed.begin() + j);
+//					times.erase(times.begin() + j);
+//
+//				}
+//				else
+//					j++;
+//			}
+//			ends = std::chrono::system_clock::now();
+//			num = (ends - now);
+//		}
+//		while (check == 1)
+//		{
+//			if (GetAsyncKeyState(VK_F2))
+//			{
+//				check = -1;
+//				break;
+//			}
+//			if (GetAsyncKeyState(VK_F3))
+//				check = 2;
+//
+//			PressDown(&(rec.getvector()[i]));
+//			copy.setnode(rec.getvector()[i].time, rec.getvector()[i].pos, rec.getvector()[i].pos2, rec.getvector()[i].key, rec.getvector()[i].rep);
+//			pressed.push_back(&copy);
+//			times.push_back(std::chrono::system_clock::now());
+//			if ((1+i) < rec.getvector().size())
+//			{
+//				i++;
+//				if (rec.getvector()[i].time != 0)
+//					break;
+//				
+//			}
+//			else
+//			{
+//				i = 0;
+//				break;
+//			}
+//
+//				
+//			
+//
+//					
+//		}
+//
+//	
+//		
+//	}
+//	i = 0;
+//	while (!times.empty())
+//	{
+//		
+//		PressUp(pressed[i]);
+//		pressed.erase(pressed.begin() + i);
+//		times.erase(times.begin() + i);
+//
+//	}
+//}
+
+
+
+//this is obviously incorrect, i prob dont need multithreading for this step rather a sort function so things happen on time.
 void copycatexecute(record& rec)
 {
-	vector<record::node*> pressed;
+	
 	std::vector<std::chrono::time_point<std::chrono::system_clock>> times;						//here we put now + rep for each value and wait till now reaches  that time.
-	std::chrono::time_point<std::chrono::system_clock> now;
+	std::chrono::time_point<std::chrono::system_clock> now, ends, endr;
+	vector< std::thread> threads;
+	std::chrono::duration<long double> num;
 	int check = 1;
-	int i=0;
+	int i = 0;
 	int j = 0;
+	now = std::chrono::system_clock::now();
 	while (check != -1)
 	{
 		if (rec.getvector().size() <= i)
 		{
 			if (check == 2)
 				break;
-			else
+			else {
+				now = std::chrono::system_clock::now();
 				i = 0;
-		}
-		now = std::chrono::system_clock::now();
-		while (now.time_since_epoch().count() < rec.getvector()[i].time)								//wait till entry
-		{
-			if (GetAsyncKeyState(VK_F2))
-			{
-				check = -1;
-				break;
-			}
-			if (GetAsyncKeyState(VK_F3))
-				check = 2;
-
-			if (!times.empty())																		
-			{
-				if (times[j].time_since_epoch().count() >= pressed[j]->rep)								//checks time for reps while we wait on next start
-				{
-					PressUp(pressed[j]);
-					pressed.erase(pressed.begin() + j);
-					times.erase(times.begin() + j);
-
-				}
-				else
-					j++;
 			}
 		}
-		while (check == 1)
+		
+		ends = std::chrono::system_clock::now();
+		num = (ends - now);
+		while (num.count() < rec.getvector()[i].time)								//wait till entry
 		{
-			if (GetAsyncKeyState(VK_F2))
-			{
-				check = -1;
-				break;
-			}
-			if (GetAsyncKeyState(VK_F3))
-				check = 2;
-
-			PressDown(&(rec.getvector()[i]));
-			pressed.push_back(&(rec.getvector()[i]));
-			times.push_back(std::chrono::system_clock::now());
-			if (i + 1 < rec.getvector().size())
-			{
-				i++;
-				if (rec.getvector()[i].time != 0)
-					break;
-				
-			}
-			else
-			{
-				i = 0;
-				break;
-			}
-
-				
 			
-
-					
+			ends = std::chrono::system_clock::now();
+			num = (ends - now);
+			if (GetAsyncKeyState(VK_F2))
+				check = -1;
 		}
-
-	
-		
-	}
-	i = 0;
-	while (!times.empty())
-	{
-		
-		PressUp(pressed[i]);
-		pressed.erase(pressed.begin() + i);
-		times.erase(times.begin() + i);
+		threads.emplace_back(std::thread(key_press,&rec.getvector()[i]));
+		i++;
+		if (GetAsyncKeyState(VK_F2))
+			check = -1;
 
 	}
+	for (auto& th : threads)
+		th.join();
 }

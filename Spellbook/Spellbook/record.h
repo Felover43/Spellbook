@@ -64,7 +64,7 @@ public:
 	void setvecrep(long double r) { vec.back().setrep(r); }
 	void setvectime(long double t) { vec.back().settime(t); }
 	void cleancat() { vec.clear(); };
-	
+	void sortcat();
 };
 
 

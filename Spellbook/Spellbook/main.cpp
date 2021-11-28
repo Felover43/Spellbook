@@ -151,7 +151,7 @@ LRESULT CALLBACK DialogProcedure(HWND hWnd, UINT msg, WPARAM wp, LPARAM lp)
 
 		if (GetAsyncKeyState(VK_F1))
 		{
-			GetWindowText(Hsleep, sleep, 5);
+			GetWindowText(Hsleep, sleep, 3);
 
 			if (is_digits(sleep))
 			{
