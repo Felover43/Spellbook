@@ -363,7 +363,8 @@ void copycatrecord(record& rec)
 		for (i=0; i < diff.size(); i++)
 		{	//waits till keys are not pressed , we send i to know if its the first or not for later time calc
 			first = true;
-			threads.emplace_back(std::thread(check_key, diff[i], std::ref(rec), std::ref(check), ntime, (ntime - otime), i, mice, std::ref(first)));
+			if(i<4)
+				threads.emplace_back(std::thread(check_key, diff[i], std::ref(rec), std::ref(check), ntime, (ntime - otime), i, mice, std::ref(first)));
 		}
 	}
 	for (auto& th : threads)
@@ -646,7 +647,8 @@ void copycatexecute(record& rec)
 			if (GetAsyncKeyState(VK_F2))
 				check = -1;
 		}
-		threads.emplace_back(std::thread(key_press,&rec.getvector()[i]));
+		
+			threads.emplace_back(std::thread(key_press,&rec.getvector()[i]));
 		i++;
 		if (GetAsyncKeyState(VK_F2))
 			check = -1;
