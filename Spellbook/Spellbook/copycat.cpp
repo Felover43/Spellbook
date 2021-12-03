@@ -616,7 +616,7 @@ void copycatrecord(record& rec)
 //this is obviously incorrect, i prob dont need multithreading for this step rather a sort function so things happen on time.
 void copycatexecute(record& rec)
 {
-	
+	record::node copy;
 	std::vector<std::chrono::time_point<std::chrono::system_clock>> times;						//here we put now + rep for each value and wait till now reaches  that time.
 	std::chrono::time_point<std::chrono::system_clock> now, ends, endr;
 	vector< std::thread> threads;
@@ -647,8 +647,12 @@ void copycatexecute(record& rec)
 			if (GetAsyncKeyState(VK_F2))
 				check = -1;
 		}
-		
-			threads.emplace_back(std::thread(key_press,&rec.getvector()[i]));
+			if(check!=-1)
+			{ 
+			copy = rec.getvector()[i];
+			threads.emplace_back(std::thread(key_press,&copy));
+			}
+
 		i++;
 		if (GetAsyncKeyState(VK_F2))
 			check = -1;

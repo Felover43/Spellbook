@@ -1,3 +1,3 @@
 ﻿C:\Program Files\Microsoft Visual Studio\2022\Community\MSBuild\Microsoft\VC\v170\Microsoft.CppBuild.targets(510,5): warning MSB8028: The intermediate directory (x64\Debug\) contains files shared from another project (auto hacks.vcxproj).  This can lead to incorrect clean and rebuild behavior.
   copycat.cpp
-  Spellbook.vcxproj -> C:\Github\SpellBook\Spellbook\Spellbook\x64\Debug\Spellbook.exe
+  Spellbook.vcxproj -> E:\Github\Spellbook\Spellbook\x64\Debug\Spellbook.exe

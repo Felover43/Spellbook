@@ -273,7 +273,9 @@ int key_press(record::node* node) {
 	ends = std::chrono::system_clock::now();
 	num = (ends - now);
 	while (num.count() < node->rep)								//wait till entry
-	{
+	{	
+		if (GetAsyncKeyState(VK_F2))
+			break;
 		ends = std::chrono::system_clock::now();
 		num = (ends - now);
 	}
