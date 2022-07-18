@@ -30,7 +30,7 @@ bool is_digits(const char* str)
 		i++;
 
 	}
-	return check ;
+	return check;
 }
 void SetColorPurp(HDC h)
 {
@@ -41,12 +41,12 @@ void SetColorPurp(HDC h)
 vector<int> whichkey()
 {
 	vector<int> nums;
-	
-		for (int i = 0; i < 256; i++) {
-			if (GetAsyncKeyState(i) & 0x8000) {
-				nums.push_back(i);
-			}
+
+	for (int i = 0; i < 256; i++) {
+		if (GetAsyncKeyState(i) & 0x8000) {
+			nums.push_back(i);
 		}
+	}
 
 	return nums;
 }
@@ -59,11 +59,11 @@ long double DelayMove(long double time)
 {
 	std::chrono::time_point<std::chrono::system_clock> start, end;
 	std::chrono::duration<long double> num;
-	long double randtime = dran(1.5,0.7);
+	long double randtime = dran(1.5, 0.7);
 	start = std::chrono::system_clock::now();
 	end = std::chrono::system_clock::now();
 	num = end - start;
-	while (num.count() <= time-randtime)
+	while (num.count() <= time - randtime)
 	{
 		if (GetAsyncKeyState(VK_F2))
 			return 0;
@@ -77,7 +77,7 @@ int MoveMouse(POINT poi, int step, long double time)
 {
 	POINT mouse;
 	long currx, curry;
-	
+
 	if (time > 3)
 	{
 		time = DelayMove(time);
@@ -91,18 +91,18 @@ int MoveMouse(POINT poi, int step, long double time)
 	{
 		if (GetAsyncKeyState(VK_F2))
 			return -1;
-		currx = mouse.x + (long)((poi.x - mouse.x)*i / step);
-		curry = mouse.y + (long)((poi.y - mouse.y)*i / step);
-		SetCursorPos((int)currx,(int)curry);
+		currx = mouse.x + (long)((poi.x - mouse.x) * i / step);
+		curry = mouse.y + (long)((poi.y - mouse.y) * i / step);
+		SetCursorPos((int)currx, (int)curry);
 		start = std::chrono::system_clock::now();
 		end = std::chrono::system_clock::now();
-		num = end -start;
+		num = end - start;
 		while (num.count() <= time / step)			//delays the movement speed so it looks natural
 		{
 			if (GetAsyncKeyState(VK_F2))
 				return -1;
 			end = std::chrono::system_clock::now();
-			num = end -start;
+			num = end - start;
 		}
 
 
@@ -128,60 +128,11 @@ int DelayPress(long double time)
 	return 1;
 }
 
+
+//Presses the key down with input function and Simulates mouse movement
 int PressDown(record::node* node)
 {
 
-	INPUT in;
-	
-	POINT mouse;
-	int check = 1;
-	
-	 
-		if (node->key < 10)
-		{
-			check = MoveMouse(node->pos, 100, node->time);
-			if (check == -1)
-				return -1;
-			in.type = INPUT_MOUSE;
-			GetCursorPos(&mouse);
-			in.mi.dx = mouse.x;
-			in.mi.dy = mouse.y;
-			in.mi.mouseData = 0;
-			in.mi.time = 0;
-			in.mi.dwExtraInfo = 0;
-			in.mi.dwExtraInfo = 0;
-			if (node->key == 1)
-			{
-				in.mi.dwFlags = MOUSEEVENTF_LEFTDOWN;
-			}
-
-			else
-				if (node->key == 2)
-					in.mi.dwFlags = MOUSEEVENTF_RIGHTDOWN;
-				else
-					if (node->key == 3)
-						in.mi.dwFlags = MOUSEEVENTF_MIDDLEDOWN;
-
-			
-			SendInput(1, &in, sizeof(in));
-		}
-		else
-		{
-			in.type = INPUT_KEYBOARD;
-			in.ki.wScan = node->key;
-			in.ki.time = 0;
-			in.ki.dwFlags = KEYEVENTF_SCANCODE;
-			SendInput(1, &in, sizeof(in));
-		
-		}
-		
-		return 1;
-	
-}
-
-int PressUp(record::node* node)
-{
-	
 	INPUT in;
 
 	POINT mouse;
@@ -190,6 +141,59 @@ int PressUp(record::node* node)
 
 	if (node->key < 10)
 	{
+		//to simulate mouse movement
+		check = MoveMouse(node->pos, 100, node->time);
+		if (check == -1)
+			return -1;
+		in.type = INPUT_MOUSE;
+		GetCursorPos(&mouse);
+		in.mi.dx = mouse.x;
+		in.mi.dy = mouse.y;
+		in.mi.mouseData = 0;
+		in.mi.time = 0;
+		in.mi.dwExtraInfo = 0;
+		in.mi.dwExtraInfo = 0;
+		if (node->key == 1)
+		{
+			in.mi.dwFlags = MOUSEEVENTF_LEFTDOWN;
+		}
+
+		else
+			if (node->key == 2)
+				in.mi.dwFlags = MOUSEEVENTF_RIGHTDOWN;
+			else
+				if (node->key == 3)
+					in.mi.dwFlags = MOUSEEVENTF_MIDDLEDOWN;
+
+
+		SendInput(1, &in, sizeof(in));
+	}
+	else
+	{
+		in.type = INPUT_KEYBOARD;
+		in.ki.wScan = node->key;
+		in.ki.time = 0;
+		in.ki.dwFlags = KEYEVENTF_SCANCODE;
+		SendInput(1, &in, sizeof(INPUT));
+
+	}
+
+	return 1;
+
+}
+//Presses the key up with input function and Simulates mouse movement
+int PressUp(record::node* node)
+{
+
+	INPUT in;
+
+	POINT mouse;
+	int check = 1;
+
+
+	if (node->key < 10)
+	{
+		//simulates mouse movement
 		check = MoveMouse(node->pos2, 100, node->time);
 		if (check == -1)
 			return -1;
@@ -213,7 +217,7 @@ int PressUp(record::node* node)
 				if (node->key == 3)
 					in.mi.dwFlags = MOUSEEVENTF_MIDDLEUP;
 
-		
+
 		SendInput(1, &in, sizeof(in));
 		/*start = std::chrono::system_clock::now();
 		end = std::chrono::system_clock::now();
@@ -235,14 +239,14 @@ int PressUp(record::node* node)
 	return 1;
 
 }
-
-void check_key(int key, record& rec, int& check, std::chrono::time_point<std::chrono::system_clock> ntime, std::chrono::duration<long double> start, int i, std::vector<POINT> mice,bool& first)
+//checks which key was pressed and records data based on it like mouse pos
+void check_key(int key, record& rec, int& check, std::chrono::time_point<std::chrono::system_clock> ntime, std::chrono::duration<long double> start, int i, std::vector<POINT> mice, bool& first)
 {
-	 
+
 	std::chrono::duration<long double> rep;
 	if (key == VK_F2)
 		check = 0;
-	while(GetAsyncKeyState(key) && check==1)
+	while (GetAsyncKeyState(key) && check == 1)
 	{
 	}
 	std::chrono::time_point<std::chrono::system_clock> etime = std::chrono::system_clock::now();
@@ -264,22 +268,40 @@ void check_key(int key, record& rec, int& check, std::chrono::time_point<std::ch
 
 }
 
+//int key_press(record::node* node) {
+//
+//	std::chrono::time_point<std::chrono::system_clock> now, ends, endr;
+//	std::chrono::duration<long double> num;
+//	Sleep(1);
+//	PressDown(node);
+//	now = std::chrono::system_clock::now();
+//	ends = std::chrono::system_clock::now();
+//	num = (ends - now);
+//	while (num.count() < node->rep)								//wait till entry
+//	{	
+//		if (GetAsyncKeyState(VK_F2))
+//			break;
+//		ends = std::chrono::system_clock::now();
+//		num = (ends - now);
+//	}
+//	Sleep(1);
+//	PressUp(node);
+//	return 1;
+//}
+
 int key_press(record::node* node) {
 
 	std::chrono::time_point<std::chrono::system_clock> now, ends, endr;
 	std::chrono::duration<long double> num;
-	PressDown(node);
-	now = std::chrono::system_clock::now();
-	ends = std::chrono::system_clock::now();
-	num = (ends - now);
-	while (num.count() < node->rep)								//wait till entry
-	{	
-		if (GetAsyncKeyState(VK_F2))
-			break;
-		ends = std::chrono::system_clock::now();
-		num = (ends - now);
-	}
-	PressUp(node);
+	int check = 1;
+	Sleep(1);
+	check = PressDown(node);
+	if (check != 1)
+		return check;
+	Sleep(1);
+	check = PressUp(node);
+	if (check != 1)
+		return check;
 	return 1;
 }
 

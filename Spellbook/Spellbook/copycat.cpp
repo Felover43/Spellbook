@@ -18,25 +18,25 @@ using namespace std;
 //
 //
 //
-void SaveTheCat(record& rec,string save)
+void SaveTheCat(record& rec, string save)
 {
 	std::ofstream file;
 	file.open(ExePath() + "\\savefiles\\" + save.c_str() + ".txt", std::ofstream::out | std::ofstream::trunc);
 	if (file.is_open())
 	{
-			for (unsigned int i = 0; i < rec.getvector().size(); i++) {
-				file << rec.getvector()[i].key<<"\n";
-				file << rec.getvector()[i].pos.x<<"\n";
-				file << rec.getvector()[i].pos.y << "\n";
-				file << rec.getvector()[i].pos2.x<< "\n";
-				file << rec.getvector()[i].pos2.y << "\n";
-				file << rec.getvector()[i].rep << "\n";
-				file << rec.getvector()[i].time << "\n";
-				file << "\n";
-			}
-			file.close();
+		for (unsigned int i = 0; i < rec.getvector().size(); i++) {
+			file << rec.getvector()[i].key << "\n";
+			file << rec.getvector()[i].pos.x << "\n";
+			file << rec.getvector()[i].pos.y << "\n";
+			file << rec.getvector()[i].pos2.x << "\n";
+			file << rec.getvector()[i].pos2.y << "\n";
+			file << rec.getvector()[i].rep << "\n";
+			file << rec.getvector()[i].time << "\n";
+			file << "\n";
+		}
+		file.close();
 	}
-	else 
+	else
 		Beep(440, 500);
 }
 // upload the cat : turns text file into copy vector
@@ -45,11 +45,11 @@ void SaveTheCat(record& rec,string save)
 //
 // 
 void UploadTheCat(record& rec, string save)
-{ 
-	
+{
+
 	std::ifstream file;
 	file.open(ExePath() + "\\savefiles\\" + save.c_str() + ".txt");
-	int i=0;
+	int i = 0;
 	if (file.is_open())
 	{
 		std::string line;
@@ -62,77 +62,77 @@ void UploadTheCat(record& rec, string save)
 					rec.getvector().clear();
 			else
 				switch (i)
-				
-				{
-					case 0:
-						{
-						rec.setEvec();
-						rec.setveckey(stoi(line));
-						i++;
-						break;
-						}
-					case 1:
-						{
-						rec.setvecposx(stoi(line));
-						i++;
-						break;
-						}
-					case 2:
-					{
-						rec.setvecposy(stoi(line));
-						i++;
-						break;
-					}
-					case 3:
-					{
-						rec.setvecpos2x(stoi(line));
-						i++;
-						break;
-					}
-					case 4:
-					{
-						rec.setvecpos2y(stoi(line));
-						i++;
-						break;
-					}
-					case 5:
-					{
-						rec.setvecrep(stold(line));
-						i++;
-						break;
-					}
-					case 6:
-					{
-						rec.setvectime(stold(line));
-						i++;
-						break;
-					}
-					case 7:
-					{
-						if(line == "" )
-							i = 0;
-						else
-						{
-							rec.getvector().clear();
-							i = -1;
-						}
-						break;
-					}
-					default:
-						break;
 
-					
+				{
+				case 0:
+				{
+					rec.setEvec();
+					rec.setveckey(stoi(line));
+					i++;
+					break;
+				}
+				case 1:
+				{
+					rec.setvecposx(stoi(line));
+					i++;
+					break;
+				}
+				case 2:
+				{
+					rec.setvecposy(stoi(line));
+					i++;
+					break;
+				}
+				case 3:
+				{
+					rec.setvecpos2x(stoi(line));
+					i++;
+					break;
+				}
+				case 4:
+				{
+					rec.setvecpos2y(stoi(line));
+					i++;
+					break;
+				}
+				case 5:
+				{
+					rec.setvecrep(stold(line));
+					i++;
+					break;
+				}
+				case 6:
+				{
+					rec.setvectime(stold(line));
+					i++;
+					break;
+				}
+				case 7:
+				{
+					if (line == "")
+						i = 0;
+					else
+					{
+						rec.getvector().clear();
+						i = -1;
+					}
+					break;
+				}
+				default:
+					break;
+
+
 				}
 
 		}
 		file.close();
-		
+
 	}
 	else
 		Beep(440, 500);
-	
-	
-	
+
+
+
 }
 
 //void copycatrecord(record& rec)
@@ -328,7 +328,7 @@ void copycatrecord(record& rec)
 	std::vector<POINT> mice;
 	POINT mouse;
 	vector< std::thread> threads;
-	vector<int> keys;																
+	vector<int> keys;
 	int check = 1;
 	int i = 0;
 	GetCursorPos(&mouse);
@@ -353,17 +353,17 @@ void copycatrecord(record& rec)
 		nums = keys;
 		if (!diff.empty())
 		{
-			
+
 
 			ntime = std::chrono::system_clock::now();
 			mice[0] = mice[1];
 			GetCursorPos(&mouse);
 			mice[1] = mouse;
 		}
-		for (i=0; i < diff.size(); i++)
+		for (i = 0; i < diff.size(); i++)
 		{	//waits till keys are not pressed , we send i to know if its the first or not for later time calc
 			first = true;
-			if(i<4)
+			if (i < 4)
 				threads.emplace_back(std::thread(check_key, diff[i], std::ref(rec), std::ref(check), ntime, (ntime - otime), i, mice, std::ref(first)));
 		}
 	}
@@ -619,7 +619,6 @@ void copycatexecute(record& rec)
 	record::node copy;
 	std::vector<std::chrono::time_point<std::chrono::system_clock>> times;						//here we put now + rep for each value and wait till now reaches  that time.
 	std::chrono::time_point<std::chrono::system_clock> now, ends, endr;
-	vector< std::thread> threads;
 	std::chrono::duration<long double> num;
 	int check = 1;
 	int i = 0;
@@ -636,28 +635,29 @@ void copycatexecute(record& rec)
 				i = 0;
 			}
 		}
-		
+
 		ends = std::chrono::system_clock::now();
 		num = (ends - now);
 		while (num.count() < rec.getvector()[i].time)								//wait till entry
 		{
-			
+
 			ends = std::chrono::system_clock::now();
 			num = (ends - now);
 			if (GetAsyncKeyState(VK_F2))
 				check = -1;
 		}
-			if(check!=-1)
-			{ 
+		if (check != -1)
+		{
 			copy = rec.getvector()[i];
-			threads.emplace_back(std::thread(key_press,&copy));
-			}
+
+			check = key_press(&copy);
+
+		}
 
 		i++;
 		if (GetAsyncKeyState(VK_F2))
 			check = -1;
 
 	}
-	for (auto& th : threads)
-		th.join();
+
 }
