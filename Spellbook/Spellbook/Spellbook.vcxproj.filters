@@ -30,6 +30,9 @@
     <ClCompile Include="record.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="minor_image.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="clicker.h">
